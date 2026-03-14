@@ -8,5 +8,5 @@ function handle(_req, res) {
 }
 
 createServer(handle).listen(PORT, () => {
-  console.log(`Plaud server listening on http://localhost:${PORT}`);
+  console.log(`ai-note server listening on http://localhost:${PORT}`);
 });

@@ -47,7 +47,7 @@ export function createSeedDb() {
       {
         id: userId,
         name: 'Demo User',
-        email: 'demo@plaud.ai',
+        email: 'demo@ai-note.app',
         passwordHash: hashPassword('demo1234'),
         avatarUrl: null,
         plan: 'pro',

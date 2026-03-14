@@ -1,4 +1,4 @@
-const TOKEN_KEY = 'plaud_auth_token'
+const TOKEN_KEY = 'ai_note_auth_token'
 
 export function getToken(): string | null {
   if (typeof window === 'undefined') {

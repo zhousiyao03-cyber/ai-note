@@ -43,13 +43,13 @@ export function DetailPage() {
   // Keyboard shortcuts — we expose a ref-based play toggle via a global event
   const shortcuts = useMemo(() => ({
     onTogglePlay: () => {
-      document.dispatchEvent(new CustomEvent('plaud:toggle-play'))
+      document.dispatchEvent(new CustomEvent('ai-note:toggle-play'))
     },
     onSeekBack: () => {
-      document.dispatchEvent(new CustomEvent('plaud:seek', { detail: -10 }))
+      document.dispatchEvent(new CustomEvent('ai-note:seek', { detail: -10 }))
     },
     onSeekForward: () => {
-      document.dispatchEvent(new CustomEvent('plaud:seek', { detail: 10 }))
+      document.dispatchEvent(new CustomEvent('ai-note:seek', { detail: 10 }))
     },
     onSpeedUp: () => {
       const idx = SPEEDS.indexOf(playbackRate)

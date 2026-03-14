@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { useLogin } from '@/hooks/use-auth'
 
 export function LoginPage() {
-  const [email, setEmail] = useState('demo@plaud.ai')
+  const [email, setEmail] = useState('demo@ai-note.app')
   const [password, setPassword] = useState('demo1234')
   const login = useLogin()
 

@@ -31,11 +31,11 @@ export function AudioPlayer({ url }: AudioPlayerProps) {
       const seconds = (e as CustomEvent).detail as number
       skip(seconds)
     }
-    document.addEventListener('plaud:toggle-play', handleToggle)
-    document.addEventListener('plaud:seek', handleSeek)
+    document.addEventListener('ai-note:toggle-play', handleToggle)
+    document.addEventListener('ai-note:seek', handleSeek)
     return () => {
-      document.removeEventListener('plaud:toggle-play', handleToggle)
-      document.removeEventListener('plaud:seek', handleSeek)
+      document.removeEventListener('ai-note:toggle-play', handleToggle)
+      document.removeEventListener('ai-note:seek', handleSeek)
     }
   }, [togglePlay, skip])
 

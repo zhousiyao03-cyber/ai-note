@@ -1,4 +1,4 @@
--- Plaud MVP PostgreSQL schema
+-- ai-note MVP PostgreSQL schema
 -- Assumes PostgreSQL 14+
 
 create extension if not exists pgcrypto;

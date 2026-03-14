@@ -1,4 +1,4 @@
-# Plaud MVP Backend Architecture
+# ai-note MVP Backend Architecture
 
 ## Goal
 

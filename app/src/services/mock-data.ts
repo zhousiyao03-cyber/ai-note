@@ -3,7 +3,7 @@ import type { AudioFile, Transcription, User, Tag, Speaker, TranscriptionSegment
 export const mockCurrentUser: User = {
   id: 'u1',
   name: 'Demo User',
-  email: 'demo@plaud.ai',
+  email: 'demo@ai-note.app',
   avatar: '',
   plan: 'pro',
   createdAt: '2025-01-15T00:00:00Z',
@@ -14,7 +14,7 @@ export const mockUsers: User[] = [
   {
     id: 'u2',
     name: 'Test User',
-    email: 'test@plaud.ai',
+    email: 'test@ai-note.app',
     avatar: '',
     plan: 'free',
     createdAt: '2025-06-01T00:00:00Z',

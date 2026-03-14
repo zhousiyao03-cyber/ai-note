@@ -31,10 +31,10 @@ export function AppSidebar() {
       <SidebarHeader className="p-4">
         <Link to="/" className="flex items-center gap-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground font-bold text-sm">
-            P
+            A
           </div>
           <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">
-            Plaud
+            ai-note
           </span>
         </Link>
       </SidebarHeader>

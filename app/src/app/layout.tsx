@@ -3,8 +3,8 @@ import '@/index.css'
 import { Providers } from '@/components/providers'
 
 export const metadata: Metadata = {
-  title: 'Plaud',
-  description: 'Plaud transcription workspace',
+  title: 'ai-note',
+  description: 'ai-note transcription workspace',
 }
 
 interface RootLayoutProps {

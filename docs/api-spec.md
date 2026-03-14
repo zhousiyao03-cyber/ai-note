@@ -1,4 +1,4 @@
-# Plaud MVP API Specification
+# ai-note MVP API Specification
 
 Base URL: `/api/v1`
 
@@ -63,7 +63,7 @@ Request:
 ```json
 {
   "name": "Demo User",
-  "email": "demo@plaud.ai",
+  "email": "demo@ai-note.app",
   "password": "strong-password"
 }
 ```
@@ -78,7 +78,7 @@ Response `201`:
     "user": {
       "id": "usr_123",
       "name": "Demo User",
-      "email": "demo@plaud.ai",
+      "email": "demo@ai-note.app",
       "avatar_url": null,
       "plan": "free",
       "email_verified": false,
@@ -96,7 +96,7 @@ Request:
 
 ```json
 {
-  "email": "demo@plaud.ai",
+  "email": "demo@ai-note.app",
   "password": "strong-password"
 }
 ```
@@ -143,7 +143,7 @@ Request:
 ```json
 {
   "name": "Updated Name",
-  "email": "updated@plaud.ai",
+  "email": "updated@ai-note.app",
   "avatar_url": "https://cdn.example.com/avatar.png"
 }
 ```
@@ -176,7 +176,7 @@ Request:
 
 ```json
 {
-  "email": "demo@plaud.ai"
+  "email": "demo@ai-note.app"
 }
 ```
 
