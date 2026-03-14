@@ -1,6 +1,9 @@
 node_modules
 dist
 dist-ssr
+.next
+app/.next
+app/dist
 *.local
 *.log
 .DS_Store

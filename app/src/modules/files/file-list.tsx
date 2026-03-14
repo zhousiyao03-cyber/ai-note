@@ -1,5 +1,5 @@
 import { useRef, useCallback } from 'react'
-import { Link } from 'react-router'
+import { Link } from '@/lib/navigation'
 import { FileAudio, Trash2, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'

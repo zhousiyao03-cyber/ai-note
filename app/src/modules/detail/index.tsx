@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react'
-import { useParams } from 'react-router'
 import { ArrowLeft, Loader2, MessageSquare } from 'lucide-react'
-import { Link } from 'react-router'
+import { Link, useParams } from '@/lib/navigation'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'

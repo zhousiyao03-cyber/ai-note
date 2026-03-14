@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from 'react-router'
+import { useNavigate } from '@/lib/navigation'
 import { api } from '@/services/api'
 import { setToken, removeToken } from '@/lib/auth'
 

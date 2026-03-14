@@ -1,5 +1,5 @@
 import { FileAudio, Trash2 } from 'lucide-react'
-import { Link, useLocation } from 'react-router'
+import { Link, useLocation } from '@/lib/navigation'
 import { useTranslation } from 'react-i18next'
 import {
   Sidebar,

@@ -1,6 +1,8 @@
-import { Outlet } from 'react-router'
+interface AuthLayoutProps {
+  children: React.ReactNode
+}
 
-export function AuthLayout() {
+export function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
@@ -10,7 +12,7 @@ export function AuthLayout() {
           </div>
           <h1 className="text-2xl font-bold">Plaud</h1>
         </div>
-        <Outlet />
+        {children}
       </div>
     </div>
   )
