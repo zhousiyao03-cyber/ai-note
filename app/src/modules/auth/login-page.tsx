@@ -6,6 +6,20 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Label } from '@/components/ui/label'
 import { useLogin } from '@/hooks/use-auth'
 
+function getLoginErrorMessage(error: unknown) {
+  if (typeof error !== 'object' || error === null) {
+    return 'Invalid email or password'
+  }
+
+  const authError = error as { code?: string; message?: string }
+
+  if (authError.code === 'email_not_confirmed') {
+    return 'Please confirm your email before signing in.'
+  }
+
+  return authError.message ?? 'Invalid email or password'
+}
+
 export function LoginPage() {
   const [email, setEmail] = useState('demo@ai-note.app')
   const [password, setPassword] = useState('demo1234')
@@ -24,7 +38,7 @@ export function LoginPage() {
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           {login.isError && (
-            <p className="text-sm text-destructive">Invalid email or password</p>
+            <p className="text-sm text-destructive">{getLoginErrorMessage(login.error)}</p>
           )}
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>

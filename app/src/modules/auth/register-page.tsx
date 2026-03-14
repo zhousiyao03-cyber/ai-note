@@ -6,11 +6,21 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Label } from '@/components/ui/label'
 import { useRegister } from '@/hooks/use-auth'
 
+function getRegisterErrorMessage(error: unknown) {
+  if (typeof error !== 'object' || error === null) {
+    return 'Registration failed'
+  }
+
+  const authError = error as { message?: string }
+  return authError.message ?? 'Registration failed'
+}
+
 export function RegisterPage() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const register = useRegister()
+  const needsEmailConfirmation = register.isSuccess && !register.data?.session
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,7 +35,12 @@ export function RegisterPage() {
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           {register.isError && (
-            <p className="text-sm text-destructive">Registration failed</p>
+            <p className="text-sm text-destructive">{getRegisterErrorMessage(register.error)}</p>
+          )}
+          {needsEmailConfirmation && (
+            <p className="text-sm text-emerald-600">
+              Account created. Please check your email and confirm your address before signing in.
+            </p>
           )}
           <div className="space-y-2">
             <Label htmlFor="name">Name</Label>

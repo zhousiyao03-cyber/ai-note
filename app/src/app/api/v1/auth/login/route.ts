@@ -16,6 +16,9 @@ export async function POST(request: NextRequest) {
       await supabase.auth.signInWithPassword({ email, password })
 
     if (authError) {
+      if (authError.code === 'email_not_confirmed') {
+        return errorResponse('EMAIL_NOT_CONFIRMED', 'Please confirm your email before signing in', 403)
+      }
       return errorResponse('INVALID_CREDENTIALS', 'Invalid email or password', 401)
     }
 

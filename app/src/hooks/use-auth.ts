@@ -66,9 +66,11 @@ export function useRegister() {
       if (error) throw error
       return data
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['currentUser'] })
-      navigate('/')
+      if (data.session) {
+        navigate('/')
+      }
     },
   })
 }
