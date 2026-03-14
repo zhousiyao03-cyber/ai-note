@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# AI Note App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Next.js 16 transcription workspace for uploading audio, tracking transcription progress, editing transcripts, organizing files with tags, and managing account settings.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Next.js 16 App Router
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Supabase auth, database, and storage
+- TanStack Query for client data fetching
+- Inngest for background transcription workflows
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Email/password authentication flows
+- Audio file upload and transcription status tracking
+- Transcript detail page with summary, editor, export, and speaker timeline
+- Tag management and trash recovery flows
+- Settings and billing UI
+- English and Chinese localization
 
-## Expanding the ESLint configuration
+## Getting started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Install dependencies:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Copy the environment example and fill in your values:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.local.example .env.local
 ```
+
+3. Start the development server:
+
+```bash
+pnpm dev
+```
+
+The app runs at [http://localhost:3000](http://localhost:3000).
+
+## Environment variables
+
+Set the Supabase variables in `.env.local` before using authenticated flows or storage-backed features.
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+If these values are missing, the app shows the built-in Supabase setup screen instead of the main workspace.
+
+## Available scripts
+
+- `pnpm dev` to run the local development server
+- `pnpm build` to create a production build
+- `pnpm start` to serve the production build
+- `pnpm lint` to run ESLint
+
+## Project structure
+
+- `src/app`: App Router routes and API endpoints
+- `src/modules`: feature-level UI modules
+- `src/components`: shared components and UI primitives
+- `src/lib`: platform helpers, Supabase clients, exports, and Inngest setup
+- `src/hooks`: shared React hooks
+- `src/locales`: i18n dictionaries
+
+## Related docs
+
+Productization and backend planning docs live in [`../docs`](../docs).
