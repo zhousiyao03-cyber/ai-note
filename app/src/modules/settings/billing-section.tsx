@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { mockCurrentUser } from '@/services/mock-data'
+import { CheckoutDialog } from './checkout-dialog'
 
 const plans = [
   {
@@ -24,6 +26,7 @@ const plans = [
 
 export function BillingSection() {
   const currentPlan = mockCurrentUser.plan
+  const [checkoutPlan, setCheckoutPlan] = useState<{ name: string; price: number } | null>(null)
 
   return (
     <div className="space-y-6">
@@ -88,6 +91,7 @@ export function BillingSection() {
                   variant={isCurrent ? 'outline' : 'default'}
                   className="w-full"
                   disabled={isCurrent}
+                  onClick={() => !isCurrent && setCheckoutPlan(plan)}
                 >
                   {isCurrent ? 'Current Plan' : 'Upgrade'}
                 </Button>
@@ -96,6 +100,15 @@ export function BillingSection() {
           )
         })}
       </div>
+
+      {checkoutPlan && (
+        <CheckoutDialog
+          open={!!checkoutPlan}
+          onOpenChange={(open) => !open && setCheckoutPlan(null)}
+          planName={checkoutPlan.name}
+          price={checkoutPlan.price}
+        />
+      )}
     </div>
   )
 }

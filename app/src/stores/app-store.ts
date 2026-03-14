@@ -30,6 +30,10 @@ interface AppState {
   sortOrder: 'asc' | 'desc'
   setSortBy: (by: 'createdAt' | 'name' | 'duration' | 'size') => void
   setSortOrder: (order: 'asc' | 'desc') => void
+
+  // Tag filter
+  tagFilter: string[]
+  toggleTagFilter: (tagId: string) => void
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -65,4 +69,12 @@ export const useAppStore = create<AppState>((set) => ({
   sortOrder: 'desc',
   setSortBy: (by) => set({ sortBy: by }),
   setSortOrder: (order) => set({ sortOrder: order }),
+
+  tagFilter: [],
+  toggleTagFilter: (tagId) =>
+    set((s) => ({
+      tagFilter: s.tagFilter.includes(tagId)
+        ? s.tagFilter.filter((t) => t !== tagId)
+        : [...s.tagFilter, tagId],
+    })),
 }))

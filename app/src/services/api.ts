@@ -12,6 +12,7 @@ export const api = {
     sortOrder?: string
     skip?: number
     limit?: number
+    tags?: string[]
   }): Promise<PaginatedResponse<AudioFile>> {
     await delay(500)
     let files = mockAudioFiles.filter((f) => !f.deletedAt)
@@ -22,6 +23,9 @@ export const api = {
     }
     if (params?.status) {
       files = files.filter((f) => f.status === params.status)
+    }
+    if (params?.tags && params.tags.length > 0) {
+      files = files.filter((f) => params.tags!.some((t) => f.tags.includes(t)))
     }
 
     const sortBy = params?.sortBy ?? 'createdAt'

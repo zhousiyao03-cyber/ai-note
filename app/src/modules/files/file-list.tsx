@@ -1,8 +1,11 @@
+import { useRef, useCallback } from 'react'
 import { Link } from 'react-router'
 import { FileAudio, Trash2, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
-import { useFiles, useDeleteFile } from '@/hooks/use-queries'
+import { useDeleteFile, useTags } from '@/hooks/use-queries'
+import { useInfiniteFiles } from './use-infinite-files'
+import { TagBadge } from './tag-badge'
 
 function formatDuration(seconds: number) {
   const m = Math.floor(seconds / 60)
@@ -23,11 +26,30 @@ const statusColor: Record<string, string> = {
 }
 
 export function FileList() {
-  const { data, isLoading } = useFiles()
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteFiles()
   const deleteFile = useDeleteFile()
+  const { data: tags } = useTags()
   const { t } = useTranslation()
 
-  const files = data?.data
+  const tagMap = tags ? Object.fromEntries(tags.map((tg) => [tg.id, tg])) : {}
+
+  // Infinite scroll observer
+  const observerRef = useRef<IntersectionObserver | null>(null)
+  const lastRowRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (isFetchingNextPage) return
+      if (observerRef.current) observerRef.current.disconnect()
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage()
+        }
+      })
+      if (node) observerRef.current.observe(node)
+    },
+    [isFetchingNextPage, hasNextPage, fetchNextPage]
+  )
+
+  const allFiles = data?.pages?.flatMap((p) => p.data) ?? []
 
   if (isLoading) {
     return (
@@ -37,7 +59,7 @@ export function FileList() {
     )
   }
 
-  if (!files?.length) {
+  if (!allFiles.length) {
     return (
       <div className="py-20 text-center text-muted-foreground">
         <FileAudio className="mx-auto mb-4 h-12 w-12" />
@@ -48,25 +70,27 @@ export function FileList() {
 
   return (
     <div className="divide-y divide-border">
-      {files.map((file) => (
+      {allFiles.map((file, index) => (
         <div
           key={file.id}
+          ref={index === allFiles.length - 1 ? lastRowRef : undefined}
           className="flex items-center gap-4 px-4 py-3 hover:bg-muted/50 transition-colors"
         >
           <FileAudio className="h-5 w-5 shrink-0 text-muted-foreground" />
-          <Link
-            to={`/detail/${file.id}`}
-            className="min-w-0 flex-1"
-          >
-            <p className="truncate font-medium text-foreground">
-              {file.name}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {formatDuration(file.duration)} · {formatSize(file.size)} ·{' '}
-              <span className={statusColor[file.status]}>
-                {t(`status.${file.status}`)}
+          <Link to={`/detail/${file.id}`} className="min-w-0 flex-1">
+            <p className="truncate font-medium text-foreground">{file.name}</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm text-muted-foreground">
+                {formatDuration(file.duration)} · {formatSize(file.size)} ·{' '}
+                <span className={statusColor[file.status]}>
+                  {t(`status.${file.status}`)}
+                </span>
               </span>
-            </p>
+              {file.tags?.map((tagId: string) => {
+                const tag = tagMap[tagId]
+                return tag ? <TagBadge key={tagId} tag={tag} /> : null
+              })}
+            </div>
           </Link>
           <Button
             variant="ghost"
@@ -78,6 +102,11 @@ export function FileList() {
           </Button>
         </div>
       ))}
+      {isFetchingNextPage && (
+        <div className="flex items-center justify-center py-4">
+          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+        </div>
+      )}
     </div>
   )
 }

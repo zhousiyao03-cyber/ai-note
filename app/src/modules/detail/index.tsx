@@ -1,10 +1,15 @@
+import { useState, useMemo } from 'react'
 import { useParams } from 'react-router'
 import { ArrowLeft, Loader2, MessageSquare } from 'lucide-react'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { useFile, useTranscription } from '@/hooks/use-queries'
+import { useTranscriptionPolling } from '@/hooks/use-transcription-polling'
 import { useAppStore } from '@/stores/app-store'
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts'
+import { ShortcutsHelpDialog } from '@/components/shortcuts-help-dialog'
 import { AudioPlayer } from './audio-player'
 import { TranscriptionEditor } from './transcription-editor'
 import { ExportMenu } from './export-menu'
@@ -19,12 +24,49 @@ function formatDuration(seconds: number) {
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
+const SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 2]
+
 export function DetailPage() {
   const { id } = useParams<{ id: string }>()
   const { data: file, isLoading: fileLoading } = useFile(id!)
   const { data: transcription, isLoading: transcriptionLoading } = useTranscription(id!)
   const toggleSidebar = useAppStore((s) => s.toggleAskAiPanel)
+  const askAiPanelOpen = useAppStore((s) => s.askAiPanelOpen)
+  const playbackRate = useAppStore((s) => s.playbackRate)
+  const setPlaybackRate = useAppStore((s) => s.setPlaybackRate)
   const { t } = useTranslation()
+  const [showHelp, setShowHelp] = useState(false)
+
+  // Transcription progress polling for transcribing files
+  const isTranscribing = file?.status === 'transcribing'
+  const { data: progress } = useTranscriptionPolling(id!, isTranscribing)
+
+  // Keyboard shortcuts — we expose a ref-based play toggle via a global event
+  const shortcuts = useMemo(() => ({
+    onTogglePlay: () => {
+      document.dispatchEvent(new CustomEvent('plaud:toggle-play'))
+    },
+    onSeekBack: () => {
+      document.dispatchEvent(new CustomEvent('plaud:seek', { detail: -10 }))
+    },
+    onSeekForward: () => {
+      document.dispatchEvent(new CustomEvent('plaud:seek', { detail: 10 }))
+    },
+    onSpeedUp: () => {
+      const idx = SPEEDS.indexOf(playbackRate)
+      if (idx < SPEEDS.length - 1) setPlaybackRate(SPEEDS[idx + 1])
+    },
+    onSpeedDown: () => {
+      const idx = SPEEDS.indexOf(playbackRate)
+      if (idx > 0) setPlaybackRate(SPEEDS[idx - 1])
+    },
+    onClosePanel: () => {
+      if (askAiPanelOpen) toggleSidebar()
+    },
+    onShowHelp: () => setShowHelp(true),
+  }), [playbackRate, setPlaybackRate, askAiPanelOpen, toggleSidebar])
+
+  useKeyboardShortcuts(shortcuts)
 
   if (fileLoading) {
     return (
@@ -66,7 +108,7 @@ export function DetailPage() {
           )}
           <Button variant="outline" size="sm" onClick={toggleSidebar}>
             <MessageSquare className="mr-2 h-4 w-4" />
-            {t('detail.askAi')}
+            <span className="hidden sm:inline">{t('detail.askAi')}</span>
           </Button>
         </div>
       </header>
@@ -114,7 +156,15 @@ export function DetailPage() {
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
             {file.status === 'transcribing' && (
-              <Loader2 className="mb-4 h-8 w-8 animate-spin" />
+              <>
+                <Loader2 className="mb-4 h-8 w-8 animate-spin" />
+                {typeof progress === 'number' && (
+                  <div className="w-48 mt-2">
+                    <Progress value={progress} className="h-2" />
+                    <p className="text-xs text-center mt-1">{progress}%</p>
+                  </div>
+                )}
+              </>
             )}
             <p>
               {file.status === 'pending' && t('detail.pendingMsg')}
@@ -124,6 +174,8 @@ export function DetailPage() {
           </div>
         )}
       </div>
+
+      <ShortcutsHelpDialog open={showHelp} onOpenChange={setShowHelp} />
     </div>
   )
 }
