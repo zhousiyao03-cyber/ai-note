@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "files": "Files",
+    "trash": "Trash",
+    "settings": "Settings"
+  },
+  "files": {
+    "title": "Files",
+    "upload": "Upload",
+    "search": "Search files...",
+    "allStatus": "All Status",
+    "noFiles": "No audio files yet",
+    "sortBy": {
+      "createdAt": "Date Created",
+      "name": "Name",
+      "duration": "Duration",
+      "size": "Size"
+    }
+  },
+  "detail": {
+    "askAi": "Ask AI",
+    "summary": "Summary",
+    "transcription": "Transcription",
+    "noTranscription": "No transcription available",
+    "pendingMsg": "Transcription not started yet",
+    "transcribingMsg": "Transcription in progress...",
+    "failedMsg": "Transcription failed",
+    "save": "Save",
+    "export": "Export"
+  },
+  "status": {
+    "pending": "Pending",
+    "transcribing": "Transcribing...",
+    "completed": "Completed",
+    "failed": "Failed"
+  },
+  "upload": {
+    "title": "Upload Audio Files",
+    "dragDrop": "Drag & drop audio files here",
+    "formats": "WAV, MP3, M4A, OGG, FLAC, WebM",
+    "browse": "Browse Files",
+    "clear": "Clear"
+  },
+  "trash": {
+    "title": "Trash",
+    "empty": "Trash is empty",
+    "restore": "Restore",
+    "deletePermanently": "Delete permanently"
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": "Profile",
+    "preferences": "Preferences",
+    "billing": "Billing",
+    "account": "Account",
+    "saveChanges": "Save Changes",
+    "saved": "Saved!"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Create Account",
+    "forgotPassword": "Forgot password?",
+    "createAccount": "Create account",
+    "alreadyHaveAccount": "Already have an account?",
+    "backToSignIn": "Back to sign in",
+    "invalidCredentials": "Invalid email or password",
+    "resetPassword": "Reset Password",
+    "sendResetLink": "Send Reset Link"
+  },
+  "askAi": {
+    "title": "Ask AI",
+    "placeholder": "Ask a question...",
+    "emptyMsg": "Ask questions about this recording",
+    "thinking": "Thinking..."
+  },
+  "player": {
+    "noAudio": "No audio file available"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "language": {
+    "en": "English",
+    "zh": "中文"
+  }
+}

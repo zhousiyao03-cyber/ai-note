@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "files": "文件",
+    "trash": "回收站",
+    "settings": "设置"
+  },
+  "files": {
+    "title": "文件",
+    "upload": "上传",
+    "search": "搜索文件...",
+    "allStatus": "全部状态",
+    "noFiles": "暂无音频文件",
+    "sortBy": {
+      "createdAt": "创建时间",
+      "name": "名称",
+      "duration": "时长",
+      "size": "大小"
+    }
+  },
+  "detail": {
+    "askAi": "AI 问答",
+    "summary": "摘要",
+    "transcription": "转写内容",
+    "noTranscription": "暂无转写内容",
+    "pendingMsg": "转写尚未开始",
+    "transcribingMsg": "正在转写中...",
+    "failedMsg": "转写失败",
+    "save": "保存",
+    "export": "导出"
+  },
+  "status": {
+    "pending": "待处理",
+    "transcribing": "转写中...",
+    "completed": "已完成",
+    "failed": "失败"
+  },
+  "upload": {
+    "title": "上传音频文件",
+    "dragDrop": "拖拽音频文件到这里",
+    "formats": "WAV, MP3, M4A, OGG, FLAC, WebM",
+    "browse": "选择文件",
+    "clear": "清除"
+  },
+  "trash": {
+    "title": "回收站",
+    "empty": "回收站为空",
+    "restore": "恢复",
+    "deletePermanently": "永久删除"
+  },
+  "settings": {
+    "title": "设置",
+    "profile": "个人信息",
+    "preferences": "偏好设置",
+    "billing": "订阅与账单",
+    "account": "账户",
+    "saveChanges": "保存更改",
+    "saved": "已保存！"
+  },
+  "auth": {
+    "signIn": "登录",
+    "signUp": "注册",
+    "forgotPassword": "忘记密码？",
+    "createAccount": "创建账户",
+    "alreadyHaveAccount": "已有账户？",
+    "backToSignIn": "返回登录",
+    "invalidCredentials": "邮箱或密码错误",
+    "resetPassword": "重置密码",
+    "sendResetLink": "发送重置链接"
+  },
+  "askAi": {
+    "title": "AI 问答",
+    "placeholder": "输入问题...",
+    "emptyMsg": "对这段录音提问",
+    "thinking": "思考中..."
+  },
+  "player": {
+    "noAudio": "无可用音频文件"
+  },
+  "theme": {
+    "light": "浅色",
+    "dark": "深色",
+    "system": "跟随系统"
+  },
+  "language": {
+    "en": "English",
+    "zh": "中文"
+  }
+}
