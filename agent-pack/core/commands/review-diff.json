@@ -1,0 +1,29 @@
+{
+  "name": "review-diff",
+  "description": "Review a diff or pending change set for bugs, regressions, risky assumptions, and missing tests.",
+  "triggers": [
+    "review diff",
+    "review changes",
+    "code review",
+    "check this patch"
+  ],
+  "inputs": [
+    {
+      "name": "scope",
+      "required": true,
+      "description": "Provide the refs, files, or patch to review."
+    },
+    {
+      "name": "focus",
+      "required": false,
+      "description": "Optional areas to prioritize, such as auth, billing, or performance."
+    }
+  ],
+  "workflow": ["reviewer"],
+  "loadsSkills": ["repo-conventions"],
+  "requiresMcp": ["github"],
+  "output": {
+    "format": "markdown",
+    "sections": ["findings", "risks", "test-gaps"]
+  }
+}

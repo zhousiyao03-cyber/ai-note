@@ -1,0 +1,9 @@
+{
+  "host": "codex",
+  "outputRoot": ".",
+  "generatedFiles": ["AGENTS.md", "agent-pack/dist/codex/*.json"],
+  "notes": [
+    "Keep repository instructions compact and point back to source definitions.",
+    "Use generated manifests for structured metadata instead of bloating AGENTS.md."
+  ]
+}

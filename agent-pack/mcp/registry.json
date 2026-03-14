@@ -1,0 +1,22 @@
+{
+  "servers": [
+    {
+      "name": "github",
+      "description": "Repository, pull request, issue, and diff context for implementation and review workflows.",
+      "transport": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": ["GITHUB_TOKEN"],
+      "hosts": ["claude-code", "codex"]
+    },
+    {
+      "name": "notion",
+      "description": "Optional product-document context for specs, PRDs, and team notes.",
+      "transport": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-notion"],
+      "env": ["NOTION_TOKEN"],
+      "hosts": ["claude-code", "codex"]
+    }
+  ]
+}

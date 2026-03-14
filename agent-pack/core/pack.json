@@ -1,0 +1,8 @@
+{
+  "name": "shared-agent-pack",
+  "displayName": "Shared Agent Pack",
+  "description": "Cross-host commands, agents, skills, and MCP registry for Claude Code and Codex.",
+  "version": "0.1.0",
+  "hosts": ["claude-code", "codex"],
+  "generator": "scripts/build-agent-pack.mjs"
+}

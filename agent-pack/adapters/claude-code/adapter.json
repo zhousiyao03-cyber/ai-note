@@ -1,0 +1,9 @@
+{
+  "host": "claude-code",
+  "outputRoot": ".claude",
+  "generatedFiles": ["commands/*.md", "agents/*.md", "../dist/claude/*.json"],
+  "notes": [
+    "Keep settings.local.json user-owned and ignored.",
+    "Treat command and agent Markdown files as generated artifacts."
+  ]
+}

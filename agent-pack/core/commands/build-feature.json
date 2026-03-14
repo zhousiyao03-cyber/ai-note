@@ -1,0 +1,29 @@
+{
+  "name": "build-feature",
+  "description": "Implement a scoped feature in the current repository, validate the result, and summarize the change set.",
+  "triggers": [
+    "build feature",
+    "implement feature",
+    "ship a task",
+    "code this"
+  ],
+  "inputs": [
+    {
+      "name": "goal",
+      "required": true,
+      "description": "Describe the outcome to implement."
+    },
+    {
+      "name": "constraints",
+      "required": false,
+      "description": "State any deadlines, limits, or non-goals."
+    }
+  ],
+  "workflow": ["planner", "coder", "reviewer"],
+  "loadsSkills": ["repo-conventions"],
+  "requiresMcp": ["github"],
+  "output": {
+    "format": "markdown",
+    "sections": ["plan", "changes", "verification", "follow-ups"]
+  }
+}
