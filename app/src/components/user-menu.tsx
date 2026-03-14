@@ -8,13 +8,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { mockCurrentUser } from '@/services/mock-data'
-import { useLogout } from '@/hooks/use-auth'
+import { useCurrentUser, useLogout } from '@/hooks/use-auth'
 
 export function UserMenu() {
-  const user = mockCurrentUser
+  const { data: user } = useCurrentUser()
   const logout = useLogout()
-  const initials = user.name
+  const name = user?.name ?? ''
+  const email = user?.email ?? ''
+  const initials = name
     .split(' ')
     .map((n) => n[0])
     .join('')
@@ -25,17 +26,17 @@ export function UserMenu() {
       <DropdownMenuTrigger className="flex items-center gap-2 rounded-md p-1.5 hover:bg-muted/50 transition-colors outline-none w-full">
         <Avatar className="h-7 w-7">
           <AvatarFallback className="text-xs bg-primary text-primary-foreground">
-            {initials}
+            {initials || '?'}
           </AvatarFallback>
         </Avatar>
         <span className="truncate text-sm font-medium group-data-[collapsible=icon]:hidden">
-          {user.name}
+          {name}
         </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="right" align="end" className="w-48">
         <div className="px-2 py-1.5">
-          <p className="text-sm font-medium">{user.name}</p>
-          <p className="text-xs text-muted-foreground">{user.email}</p>
+          <p className="text-sm font-medium">{name}</p>
+          <p className="text-xs text-muted-foreground">{email}</p>
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
@@ -51,7 +52,7 @@ export function UserMenu() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>
+        <DropdownMenuItem onClick={() => logout.mutate()}>
           <LogOut className="mr-2 h-4 w-4" />
           Log out
         </DropdownMenuItem>

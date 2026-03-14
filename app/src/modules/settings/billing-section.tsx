@@ -3,7 +3,7 @@ import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { mockCurrentUser } from '@/services/mock-data'
+import { useCurrentUser } from '@/hooks/use-auth'
 import { CheckoutDialog } from './checkout-dialog'
 
 const plans = [
@@ -25,7 +25,8 @@ const plans = [
 ]
 
 export function BillingSection() {
-  const currentPlan = mockCurrentUser.plan
+  const { data: user } = useCurrentUser()
+  const currentPlan = user?.plan ?? 'free'
   const [checkoutPlan, setCheckoutPlan] = useState<{ name: string; price: number } | null>(null)
 
   return (

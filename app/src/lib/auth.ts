@@ -1,29 +1,17 @@
-const TOKEN_KEY = 'ai_note_auth_token'
+import { createClient } from '@/lib/supabase/client'
 
-export function getToken(): string | null {
-  if (typeof window === 'undefined') {
-    return null
-  }
-
-  return localStorage.getItem(TOKEN_KEY)
+export function getSupabaseClient() {
+  return createClient()
 }
 
-export function setToken(token: string): void {
-  if (typeof window === 'undefined') {
-    return
-  }
-
-  localStorage.setItem(TOKEN_KEY, token)
+export async function isAuthenticated(): Promise<boolean> {
+  const supabase = createClient()
+  const { data: { session } } = await supabase.auth.getSession()
+  return !!session
 }
 
-export function removeToken(): void {
-  if (typeof window === 'undefined') {
-    return
-  }
-
-  localStorage.removeItem(TOKEN_KEY)
-}
-
-export function isAuthenticated(): boolean {
-  return !!getToken()
+// Synchronous check for SSR hydration guard — checks cookie presence
+export function isAuthenticatedSync(): boolean {
+  if (typeof document === 'undefined') return false
+  return document.cookie.includes('sb-')
 }

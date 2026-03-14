@@ -1,10 +1,20 @@
-import type { AudioFile, Transcription, AskAIMessage, PaginatedResponse } from '@/types'
-import { mockAudioFiles, mockTranscriptions, mockTags } from './mock-data'
-import type { Tag } from '@/types'
+import type { AudioFile, Transcription, AskAIMessage, PaginatedResponse, Tag, User } from '@/types'
 
-const delay = (ms: number) => new Promise((r) => setTimeout(r, ms))
+async function fetchJSON<T>(url: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(url, {
+    ...init,
+    headers: { 'Content-Type': 'application/json', ...init?.headers },
+  })
+  const json = await res.json()
+  if (!res.ok) {
+    throw new Error(json.error?.message ?? `Request failed: ${res.status}`)
+  }
+  return json.data as T
+}
 
 export const api = {
+  // --- Files ---
+
   async getFiles(params?: {
     search?: string
     status?: string | null
@@ -14,195 +24,182 @@ export const api = {
     limit?: number
     tags?: string[]
   }): Promise<PaginatedResponse<AudioFile>> {
-    await delay(500)
-    let files = mockAudioFiles.filter((f) => !f.deletedAt)
+    const sp = new URLSearchParams()
+    if (params?.search) sp.set('search', params.search)
+    if (params?.status) sp.set('status', params.status)
+    if (params?.sortBy) sp.set('sortBy', params.sortBy)
+    if (params?.sortOrder) sp.set('sortOrder', params.sortOrder)
+    if (params?.skip) sp.set('skip', String(params.skip))
+    if (params?.limit) sp.set('limit', String(params.limit))
+    if (params?.tags?.length) sp.set('tags', params.tags.join(','))
 
-    if (params?.search) {
-      const q = params.search.toLowerCase()
-      files = files.filter((f) => f.name.toLowerCase().includes(q))
-    }
-    if (params?.status) {
-      files = files.filter((f) => f.status === params.status)
-    }
-    if (params?.tags && params.tags.length > 0) {
-      files = files.filter((f) => params.tags!.some((t) => f.tags.includes(t)))
-    }
-
-    const sortBy = params?.sortBy ?? 'createdAt'
-    const sortOrder = params?.sortOrder ?? 'desc'
-    files.sort((a, b) => {
-      const av = a[sortBy as keyof AudioFile]
-      const bv = b[sortBy as keyof AudioFile]
-      if (typeof av === 'string' && typeof bv === 'string') {
-        return sortOrder === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av)
-      }
-      return sortOrder === 'asc' ? Number(av) - Number(bv) : Number(bv) - Number(av)
-    })
-
-    const total = files.length
-    const skip = params?.skip ?? 0
-    const limit = params?.limit ?? 50
-    const paged = files.slice(skip, skip + limit)
-
-    return { data: paged, total, hasMore: skip + limit < total }
+    const qs = sp.toString()
+    const res = await fetch(`/api/v1/files${qs ? `?${qs}` : ''}`)
+    const json = await res.json()
+    if (!res.ok) throw new Error(json.error?.message ?? 'Failed to fetch files')
+    return { data: json.data, total: json.meta.total, hasMore: json.meta.hasMore }
   },
 
   async getFile(id: string): Promise<AudioFile> {
-    await delay(300)
-    const file = mockAudioFiles.find((f) => f.id === id)
-    if (!file) throw new Error('File not found')
-    return { ...file }
+    return fetchJSON<AudioFile>(`/api/v1/files/${id}`)
   },
 
   async deleteFile(id: string): Promise<void> {
-    await delay(300)
-    const file = mockAudioFiles.find((f) => f.id === id)
-    if (file) file.deletedAt = new Date().toISOString()
-  },
-
-  async getTranscription(fileId: string): Promise<Transcription | null> {
-    await delay(400)
-    return mockTranscriptions[fileId] ? { ...mockTranscriptions[fileId] } : null
-  },
-
-  async askAI(_fileId: string, question: string): Promise<AskAIMessage> {
-    await delay(1000)
-    return {
-      id: crypto.randomUUID(),
-      role: 'assistant',
-      content: `Based on the transcription of this recording, here's my analysis:\n\n${question.length > 20 ? 'This is a detailed question. ' : ''}The key points from this recording include the discussion topics and action items mentioned by the speakers. Would you like me to elaborate on any specific aspect?`,
-      createdAt: new Date().toISOString(),
-    }
-  },
-
-  async uploadFile(file: File, onProgress?: (pct: number) => void): Promise<AudioFile> {
-    // Simulate upload progress
-    for (let i = 0; i <= 100; i += 10) {
-      await delay(200)
-      onProgress?.(i)
-    }
-
-    const newFile: AudioFile = {
-      id: crypto.randomUUID(),
-      name: file.name,
-      duration: Math.floor(Math.random() * 3600) + 60,
-      size: file.size,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      status: 'pending',
-      url: '',
-      tags: [],
-      deletedAt: null,
-    }
-    mockAudioFiles.unshift(newFile)
-    return newFile
-  },
-
-  async updateTranscription(fileId: string, content: string): Promise<Transcription> {
-    await delay(300)
-    const t = mockTranscriptions[fileId]
-    if (!t) throw new Error('Transcription not found')
-    t.content = content
-    t.updatedAt = new Date().toISOString()
-    return { ...t }
+    await fetchJSON(`/api/v1/files/${id}`, { method: 'DELETE' })
   },
 
   async renameFile(id: string, name: string): Promise<AudioFile> {
-    await delay(300)
-    const file = mockAudioFiles.find((f) => f.id === id)
-    if (!file) throw new Error('File not found')
-    file.name = name
-    file.updatedAt = new Date().toISOString()
-    return { ...file }
+    return fetchJSON<AudioFile>(`/api/v1/files/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ name }),
+    })
   },
 
-  // Trash
+  // --- Trash ---
+
   async getTrashFiles(): Promise<AudioFile[]> {
-    await delay(500)
-    return mockAudioFiles.filter((f) => f.deletedAt !== null)
+    return fetchJSON<AudioFile[]>('/api/v1/trash/files')
   },
 
   async restoreFile(id: string): Promise<void> {
-    await delay(300)
-    const file = mockAudioFiles.find((f) => f.id === id)
-    if (file) file.deletedAt = null
+    await fetchJSON(`/api/v1/files/${id}/restore`, { method: 'POST' })
   },
 
   async permanentDeleteFile(id: string): Promise<void> {
-    await delay(300)
-    const idx = mockAudioFiles.findIndex((f) => f.id === id)
-    if (idx !== -1) mockAudioFiles.splice(idx, 1)
+    await fetchJSON(`/api/v1/files/${id}/permanent`, { method: 'DELETE' })
   },
 
-  // Tags
+  // --- Tags ---
+
   async getTags(): Promise<Tag[]> {
-    await delay(200)
-    return [...mockTags]
+    return fetchJSON<Tag[]>('/api/v1/tags')
   },
 
   async createTag(name: string, color: string): Promise<Tag> {
-    await delay(200)
-    const tag: Tag = { id: crypto.randomUUID(), name, color }
-    mockTags.push(tag)
-    return tag
+    return fetchJSON<Tag>('/api/v1/tags', {
+      method: 'POST',
+      body: JSON.stringify({ name, color }),
+    })
   },
 
   async deleteTag(id: string): Promise<void> {
-    await delay(200)
-    const idx = mockTags.findIndex((t) => t.id === id)
-    if (idx !== -1) mockTags.splice(idx, 1)
+    await fetchJSON(`/api/v1/tags/${id}`, { method: 'DELETE' })
   },
 
   async addTagToFile(fileId: string, tagId: string): Promise<void> {
-    await delay(200)
-    const file = mockAudioFiles.find((f) => f.id === fileId)
-    if (file && !file.tags.includes(tagId)) file.tags.push(tagId)
+    await fetchJSON(`/api/v1/files/${fileId}/tags/${tagId}`, { method: 'POST' })
   },
 
   async removeTagFromFile(fileId: string, tagId: string): Promise<void> {
-    await delay(200)
-    const file = mockAudioFiles.find((f) => f.id === fileId)
-    if (file) file.tags = file.tags.filter((t) => t !== tagId)
+    await fetchJSON(`/api/v1/files/${fileId}/tags/${tagId}`, { method: 'DELETE' })
   },
 
-  // Auth (mock)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async login(email: string, _password: string): Promise<{ token: string; user: typeof import('./mock-data').mockCurrentUser }> {
-    await delay(500)
-    const { mockUsers } = await import('./mock-data')
-    const user = mockUsers.find((u) => u.email === email)
-    if (!user) throw new Error('Invalid credentials')
-    return { token: 'mock-jwt-token', user }
+  // --- Transcription ---
+
+  async getTranscription(fileId: string): Promise<Transcription | null> {
+    try {
+      return await fetchJSON<Transcription>(`/api/v1/files/${fileId}/transcription`)
+    } catch {
+      return null
+    }
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async register(name: string, email: string, _password: string): Promise<{ token: string; user: typeof import('./mock-data').mockCurrentUser }> {
-    await delay(500)
-    const { mockCurrentUser } = await import('./mock-data')
-    return { token: 'mock-jwt-token', user: { ...mockCurrentUser, name, email } }
+  async updateTranscription(fileId: string, content: string): Promise<Transcription> {
+    return fetchJSON<Transcription>(`/api/v1/files/${fileId}/transcription`, {
+      method: 'PATCH',
+      body: JSON.stringify({ content }),
+    })
   },
 
-  async getCurrentUser(): Promise<typeof import('./mock-data').mockCurrentUser> {
-    await delay(200)
-    const { mockCurrentUser } = await import('./mock-data')
-    return { ...mockCurrentUser }
+  // --- Ask AI ---
+
+  async askAI(fileId: string, question: string): Promise<AskAIMessage> {
+    return fetchJSON<AskAIMessage>(`/api/v1/files/${fileId}/ask-ai/messages`, {
+      method: 'POST',
+      body: JSON.stringify({ question }),
+    })
+  },
+
+  // --- Upload ---
+
+  async uploadFile(file: File, onProgress?: (pct: number) => void): Promise<AudioFile> {
+    // Phase 2: will use upload-init → direct PUT → upload-complete
+    // For now, stub that returns after "uploading"
+    onProgress?.(0)
+
+    const initRes = await fetchJSON<{ fileId: string; url: string }>('/api/v1/files/upload-init', {
+      method: 'POST',
+      body: JSON.stringify({
+        fileName: file.name,
+        mimeType: file.type,
+        sizeBytes: file.size,
+      }),
+    })
+
+    // Direct upload to Supabase Storage
+    onProgress?.(10)
+    await fetch(initRes.url, {
+      method: 'PUT',
+      headers: { 'Content-Type': file.type },
+      body: file,
+    })
+    onProgress?.(80)
+
+    // Complete upload
+    const audioFile = await fetchJSON<AudioFile>('/api/v1/files/upload-complete', {
+      method: 'POST',
+      body: JSON.stringify({ fileId: initRes.fileId }),
+    })
+    onProgress?.(100)
+
+    return audioFile
+  },
+
+  // --- Auth (called via Supabase client directly in use-auth.ts, these are for profile) ---
+
+  async getCurrentUser(): Promise<User> {
+    return fetchJSON<User>('/api/v1/me')
   },
 
   async updateProfile(data: { name?: string; email?: string }): Promise<void> {
-    await delay(300)
-    const { mockCurrentUser } = await import('./mock-data')
-    if (data.name) mockCurrentUser.name = data.name
-    if (data.email) mockCurrentUser.email = data.email
+    await fetchJSON('/api/v1/me', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    })
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async changePassword(_oldPassword: string, _newPassword: string): Promise<void> {
-    await delay(300)
+  async changePassword(oldPassword: string, newPassword: string): Promise<void> {
+    await fetchJSON('/api/v1/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ oldPassword, newPassword }),
+    })
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getTranscriptionProgress(_fileId: string): Promise<number> {
-    await delay(200)
-    return Math.min(100, Math.floor(Math.random() * 30) + 40)
+  async getTranscriptionProgress(fileId: string): Promise<number> {
+    const data = await fetchJSON<{ status: string; progress: number }>(`/api/v1/files/${fileId}/status`)
+    return data.progress
+  },
+
+  // Auth API passthrough (used by login/register forms if they call api.login/api.register)
+  async login(email: string, password: string): Promise<{ token: string; user: User }> {
+    const res = await fetch('/api/v1/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+    const json = await res.json()
+    if (!res.ok) throw new Error(json.error?.message ?? 'Login failed')
+    return { token: '', user: json.data }
+  },
+
+  async register(name: string, email: string, password: string): Promise<{ token: string; user: User }> {
+    const res = await fetch('/api/v1/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password }),
+    })
+    const json = await res.json()
+    if (!res.ok) throw new Error(json.error?.message ?? 'Registration failed')
+    return { token: '', user: json.data }
   },
 }

@@ -1,20 +1,25 @@
 export interface AudioFile {
   id: string
   name: string
-  duration: number // seconds
-  size: number // bytes
+  duration: number // seconds (DB: duration_sec)
+  size: number // bytes (DB: size_bytes)
   createdAt: string
   updatedAt: string
   status: 'pending' | 'transcribing' | 'completed' | 'failed'
-  url: string
-  tags: string[]
+  url: string // (DB: audio_url)
+  tags: string[] // tag IDs from file_tags join
   deletedAt: string | null
+  progress?: number // 0-100, transcription progress
+  mimeType?: string
+  language?: string
+  errorMessage?: string | null
+  storageKey?: string
 }
 
 export interface Transcription {
   id: string
   fileId: string
-  content: string // HTML content from Tiptap
+  content: string // HTML content from Tiptap (DB: content_html)
   summary: string
   language: string
   createdAt: string
@@ -34,7 +39,7 @@ export interface User {
   id: string
   name: string
   email: string
-  avatar?: string
+  avatar?: string // (DB: avatar_url)
   plan: 'free' | 'pro' | 'enterprise'
   createdAt: string
 }
@@ -96,4 +101,12 @@ export interface PaginatedResponse<T> {
   data: T[]
   total: number
   hasMore: boolean
+}
+
+export interface UserPreferences {
+  emailNotifications: boolean
+  autoTranscribe: boolean
+  speakerDetection: boolean
+  language: string
+  theme: string
 }

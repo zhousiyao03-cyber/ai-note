@@ -3,12 +3,13 @@ import { Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
-import { mockCurrentUser } from '@/services/mock-data'
+import { useCurrentUser } from '@/hooks/use-auth'
 import { api } from '@/services/api'
 
 export function ProfileSection() {
-  const [name, setName] = useState(mockCurrentUser.name)
-  const [email, setEmail] = useState(mockCurrentUser.email)
+  const { data: user } = useCurrentUser()
+  const [name, setName] = useState(user?.name ?? '')
+  const [email, setEmail] = useState(user?.email ?? '')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 

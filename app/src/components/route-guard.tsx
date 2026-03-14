@@ -1,6 +1,8 @@
-import { useSyncExternalStore } from 'react'
+'use client'
+
+import { useEffect, useState } from 'react'
 import { Navigate, useLocation } from '@/lib/navigation'
-import { isAuthenticated } from '@/lib/auth'
+import { createClient } from '@/lib/supabase/client'
 
 interface RouteGuardProps {
   children: React.ReactNode
@@ -8,17 +10,26 @@ interface RouteGuardProps {
 
 export function RouteGuard({ children }: RouteGuardProps) {
   const location = useLocation()
-  const ready = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  )
+  const [state, setState] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading')
 
-  if (!ready) {
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setState(session ? 'authenticated' : 'unauthenticated')
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setState(session ? 'authenticated' : 'unauthenticated')
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  if (state === 'loading') {
     return null
   }
 
-  if (!isAuthenticated()) {
+  if (state === 'unauthenticated') {
     return <Navigate to={`/login?from=${encodeURIComponent(location.pathname)}`} replace />
   }
 
