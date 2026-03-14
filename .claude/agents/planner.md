@@ -20,6 +20,10 @@ Mission: Clarify the task, break it into minimal steps, and decide whether hando
 ## Allowed skills
 
 - repo-conventions
+- find-skills
+- frontend-design
+- vercel-react-best-practices
+- web-design-guidelines
 
 ## Allowed MCP
 

@@ -119,7 +119,7 @@ function renderClaudeRepoGuide(pack, commands, agents, skills, mcpRegistry) {
   const skillList = skills
     .map(
       (skill) =>
-        `- \`${skill.name}\`: project-local skill at \`.claude/skills/${skill.name}/SKILL.md\``
+        `- \`${skill.name}\`: ${skill.description} Path: \`.claude/skills/${skill.name}/SKILL.md\``
     )
     .join("\n");
   const mcpList = mcpRegistry.servers
@@ -258,8 +258,11 @@ function renderClaudeSetupGuide(mcpRegistry) {
 }
 
 function extractSkillMetadata(skillRootRelative) {
-  const raw = readFileSync(path.join(root, skillRootRelative, "SKILL.md"), "utf8");
-  const match = raw.match(/^---\n([\s\S]*?)\n---/);
+  const raw = readFileSync(path.join(root, skillRootRelative, "SKILL.md"), "utf8").replace(
+    /^\uFEFF/,
+    ""
+  );
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
 
   if (!match) {
     throw new Error(`Missing frontmatter in ${skillRootRelative}/SKILL.md`);

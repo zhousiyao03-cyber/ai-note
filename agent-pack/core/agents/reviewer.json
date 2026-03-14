@@ -8,7 +8,12 @@
     "State explicitly when no concrete findings are present."
   ],
   "usesPolicies": ["output-contracts"],
-  "allowedSkills": ["repo-conventions"],
+  "allowedSkills": [
+    "repo-conventions",
+    "find-skills",
+    "vercel-react-best-practices",
+    "web-design-guidelines"
+  ],
   "allowedMcp": ["github"],
   "handoffWhen": [
     "A concrete fix is needed from implementation.",

@@ -24,7 +24,11 @@ Shared Agent Pack is the source-backed command, agent, skill, and MCP system for
 
 ## Skills
 
+- `find-skills`: Helps users discover and install agent skills when they ask questions like "how do I do X", "find a skill for X", "is there a skill that can...", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill. Path: `agent-pack/core/skills/find-skills/SKILL.md`.
+- `frontend-design`: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics. Path: `agent-pack/core/skills/frontend-design/SKILL.md`.
 - `repo-conventions`: Apply the shared conventions for this repository's cross-host agent pack. Use when adding or updating commands, subagents, skills, MCP registry entries, generator scripts, or host adapters for Claude Code and Codex. Path: `agent-pack/core/skills/repo-conventions/SKILL.md`.
+- `vercel-react-best-practices`: React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements. Path: `agent-pack/core/skills/vercel-react-best-practices/SKILL.md`.
+- `web-design-guidelines`: Review UI code for Web Interface Guidelines compliance. Use when asked to "review my UI", "check accessibility", "audit design", "review UX", or "check my site against best practices". Path: `agent-pack/core/skills/web-design-guidelines/SKILL.md`.
 
 ## MCP registry
 

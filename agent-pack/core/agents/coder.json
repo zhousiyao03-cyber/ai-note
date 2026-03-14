@@ -8,7 +8,12 @@
     "Run targeted validation after editing and report any gaps."
   ],
   "usesPolicies": ["escalation", "output-contracts"],
-  "allowedSkills": ["repo-conventions"],
+  "allowedSkills": [
+    "repo-conventions",
+    "find-skills",
+    "frontend-design",
+    "vercel-react-best-practices"
+  ],
   "allowedMcp": ["github"],
   "handoffWhen": [
     "The change is ready for a skeptical review.",

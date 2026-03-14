@@ -20,6 +20,9 @@ Mission: Make the smallest high-confidence code change that satisfies the reques
 ## Allowed skills
 
 - repo-conventions
+- find-skills
+- frontend-design
+- vercel-react-best-practices
 
 ## Allowed MCP
 

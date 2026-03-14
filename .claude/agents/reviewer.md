@@ -19,6 +19,9 @@ Mission: Find correctness issues, behavior regressions, missing tests, and hidde
 ## Allowed skills
 
 - repo-conventions
+- find-skills
+- vercel-react-best-practices
+- web-design-guidelines
 
 ## Allowed MCP
 

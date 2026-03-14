@@ -8,7 +8,13 @@
     "Load only the skills and references that are needed for the current task."
   ],
   "usesPolicies": ["escalation", "output-contracts"],
-  "allowedSkills": ["repo-conventions"],
+  "allowedSkills": [
+    "repo-conventions",
+    "find-skills",
+    "frontend-design",
+    "vercel-react-best-practices",
+    "web-design-guidelines"
+  ],
   "allowedMcp": ["github"],
   "handoffWhen": [
     "The task is clear enough for implementation.",
