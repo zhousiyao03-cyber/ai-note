@@ -138,11 +138,14 @@ export const api = {
 
     // Direct upload to Supabase Storage
     onProgress?.(10)
-    await fetch(initRes.url, {
+    const uploadRes = await fetch(initRes.url, {
       method: 'PUT',
       headers: { 'Content-Type': file.type },
       body: file,
     })
+    if (!uploadRes.ok) {
+      throw new Error('Failed to upload file to storage')
+    }
     onProgress?.(80)
 
     // Complete upload

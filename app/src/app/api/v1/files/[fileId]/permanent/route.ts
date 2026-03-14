@@ -1,5 +1,7 @@
 import { type NextRequest } from 'next/server'
 import { envelope, errorResponse, requireAuth } from '@/lib/api-helpers'
+import { AUDIO_BUCKET } from '@/lib/audio-storage'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 type Params = { params: Promise<{ fileId: string }> }
 
@@ -7,6 +9,7 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
   const { fileId } = await params
   const { user, supabase } = await requireAuth()
   if (!user) return errorResponse('UNAUTHORIZED', 'Not authenticated', 401)
+  const admin = createAdminClient()
 
   // Fetch file to get storage_key and verify ownership
   const { data: file, error: findError } = await supabase
@@ -22,8 +25,8 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
 
   // Delete from Supabase Storage
   if (file.storage_key) {
-    const { error: storageError } = await supabase.storage
-      .from('audio-files')
+    const { error: storageError } = await admin.storage
+      .from(AUDIO_BUCKET)
       .remove([file.storage_key])
 
     if (storageError) {

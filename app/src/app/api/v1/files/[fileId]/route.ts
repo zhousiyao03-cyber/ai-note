@@ -1,4 +1,5 @@
 import { type NextRequest } from 'next/server'
+import { createSignedAudioDownloadUrl } from '@/lib/audio-storage'
 import { envelope, errorResponse, requireAuth, toCamelCase } from '@/lib/api-helpers'
 
 type Params = { params: Promise<{ fileId: string }> }
@@ -24,8 +25,11 @@ export async function GET(_request: NextRequest, { params }: Params) {
     .eq('file_id', fileId)
 
   const tags = (ftRows ?? []).map((r: { tag_id: string }) => r.tag_id)
+  const audioUrl = file.storage_key
+    ? await createSignedAudioDownloadUrl(file.storage_key).catch(() => file.audio_url ?? '')
+    : file.audio_url ?? ''
 
-  return envelope(toCamelCase({ ...file, tags }))
+  return envelope(toCamelCase({ ...file, audio_url: audioUrl, tags }))
 }
 
 export async function PATCH(request: NextRequest, { params }: Params) {
