@@ -1,8 +1,7 @@
-import { NextRequest } from 'next/server'
 import { envelope, errorResponse } from '@/lib/api-helpers'
 import { createClient } from '@/lib/supabase/server'
 
-export async function POST(_request: NextRequest) {
+export async function POST() {
   try {
     const supabase = await createClient()
 

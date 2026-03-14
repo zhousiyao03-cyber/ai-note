@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import type { SupabaseClient, User } from '@supabase/supabase-js'
 
@@ -17,7 +17,7 @@ export function errorResponse(code: string, message: string, status: number) {
 
 // --- Auth ---
 
-export async function requireAuth(_request?: NextRequest): Promise<{
+export async function requireAuth(): Promise<{
   user: User | null
   supabase: SupabaseClient
 }> {
@@ -30,17 +30,7 @@ export async function requireAuth(_request?: NextRequest): Promise<{
 
 // --- DTO transform ---
 
-type SnakeToCamel<S extends string> = S extends `${infer T}_${infer U}`
-  ? `${T}${Capitalize<SnakeToCamel<U>>}`
-  : S
-
-type CamelToSnake<S extends string> = S extends `${infer T}${infer U}`
-  ? T extends Capitalize<T>
-    ? `_${Lowercase<T>}${CamelToSnake<U>}`
-    : `${T}${CamelToSnake<U>}`
-  : S
-
-// Field-level rename map: DB snake → frontend camel
+// Field-level rename map: DB snake -> frontend camel
 const FIELD_MAP: Record<string, string> = {
   duration_sec: 'duration',
   size_bytes: 'size',

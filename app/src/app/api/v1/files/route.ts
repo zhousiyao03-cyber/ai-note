@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
 
   // Fetch tag IDs for returned files
   const ids = (files ?? []).map((f: { id: string }) => f.id)
-  let fileTagMap: Record<string, string[]> = {}
+  const fileTagMap: Record<string, string[]> = {}
 
   if (ids.length > 0) {
     const { data: ftRows } = await supabase

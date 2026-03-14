@@ -1,7 +1,6 @@
-import { type NextRequest } from 'next/server'
 import { envelope, errorResponse, requireAuth, toCamelCase } from '@/lib/api-helpers'
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   const { user, supabase } = await requireAuth()
   if (!user) return errorResponse('UNAUTHORIZED', 'Not authenticated', 401)
 
@@ -16,7 +15,7 @@ export async function GET(_request: NextRequest) {
   return envelope(toCamelCase({ ...profile, email: user.email }))
 }
 
-export async function PATCH(request: NextRequest) {
+export async function PATCH(request: Request) {
   const { user, supabase } = await requireAuth()
   if (!user) return errorResponse('UNAUTHORIZED', 'Not authenticated', 401)
 

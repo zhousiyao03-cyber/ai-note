@@ -3,7 +3,7 @@ import { envelope, errorResponse, requireAuth } from '@/lib/api-helpers'
 
 export async function POST(request: NextRequest) {
   try {
-    const { user, supabase } = await requireAuth(request)
+    const { user, supabase } = await requireAuth()
 
     if (!user) {
       return errorResponse('UNAUTHORIZED', 'Authentication required', 401)

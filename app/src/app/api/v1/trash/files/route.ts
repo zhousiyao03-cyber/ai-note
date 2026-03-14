@@ -1,7 +1,6 @@
-import { type NextRequest } from 'next/server'
 import { envelope, errorResponse, requireAuth, transformRows } from '@/lib/api-helpers'
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   const { user, supabase } = await requireAuth()
   if (!user) return errorResponse('UNAUTHORIZED', 'Not authenticated', 401)
 
