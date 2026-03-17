@@ -1,4 +1,5 @@
 import { Search, ArrowUpDown, ChevronDown } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -9,21 +10,22 @@ import {
 import { useAppStore } from '@/stores/app-store'
 
 const statusOptions = [
-  { value: null, label: 'All Status' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'transcribing', label: 'Transcribing' },
-  { value: 'completed', label: 'Completed' },
-  { value: 'failed', label: 'Failed' },
+  { value: null, labelKey: 'files.allStatus' },
+  { value: 'pending', labelKey: 'status.pending' },
+  { value: 'transcribing', labelKey: 'status.transcribing' },
+  { value: 'completed', labelKey: 'status.completed' },
+  { value: 'failed', labelKey: 'status.failed' },
 ]
 
 const sortOptions = [
-  { value: 'createdAt', label: 'Date Created' },
-  { value: 'name', label: 'Name' },
-  { value: 'duration', label: 'Duration' },
-  { value: 'size', label: 'Size' },
+  { value: 'createdAt', labelKey: 'files.sortBy.createdAt' },
+  { value: 'name', labelKey: 'files.sortBy.name' },
+  { value: 'duration', labelKey: 'files.sortBy.duration' },
+  { value: 'size', labelKey: 'files.sortBy.size' },
 ] as const
 
 export function SearchBar() {
+  const { t } = useTranslation()
   const searchQuery = useAppStore((s) => s.searchQuery)
   const setSearchQuery = useAppStore((s) => s.setSearchQuery)
   const statusFilter = useAppStore((s) => s.statusFilter)
@@ -33,8 +35,8 @@ export function SearchBar() {
   const sortOrder = useAppStore((s) => s.sortOrder)
   const setSortOrder = useAppStore((s) => s.setSortOrder)
 
-  const currentStatus = statusOptions.find((o) => o.value === statusFilter)
-  const currentSort = sortOptions.find((o) => o.value === sortBy)
+  const currentStatus = statusOptions.find((option) => option.value === statusFilter)
+  const currentSort = sortOptions.find((option) => option.value === sortBy)
 
   return (
     <div className="flex items-center gap-2 border-b px-4 py-2">
@@ -43,26 +45,26 @@ export function SearchBar() {
         <input
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search files..."
-          className="w-full rounded-md border bg-background pl-8 pr-3 py-1.5 text-sm outline-none focus:ring-1 focus:ring-ring"
+          placeholder={t('files.search')}
+          className="w-full rounded-md border bg-background py-1.5 pl-8 pr-3 text-sm outline-none focus:ring-1 focus:ring-ring"
         />
       </div>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" className="text-xs">
-            {currentStatus?.label ?? 'All Status'}
+            {currentStatus ? t(currentStatus.labelKey) : t('files.allStatus')}
             <ChevronDown className="ml-1 h-3 w-3" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          {statusOptions.map((opt) => (
+          {statusOptions.map((option) => (
             <DropdownMenuItem
-              key={opt.value ?? 'all'}
-              onClick={() => setStatusFilter(opt.value)}
-              className={statusFilter === opt.value ? 'bg-muted' : ''}
+              key={option.value ?? 'all'}
+              onClick={() => setStatusFilter(option.value)}
+              className={statusFilter === option.value ? 'bg-muted' : ''}
             >
-              {opt.label}
+              {t(option.labelKey)}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
@@ -71,18 +73,18 @@ export function SearchBar() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" className="text-xs">
-            {currentSort?.label ?? 'Sort'}
+            {currentSort ? t(currentSort.labelKey) : t('files.sortLabel')}
             <ChevronDown className="ml-1 h-3 w-3" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          {sortOptions.map((opt) => (
+          {sortOptions.map((option) => (
             <DropdownMenuItem
-              key={opt.value}
-              onClick={() => setSortBy(opt.value)}
-              className={sortBy === opt.value ? 'bg-muted' : ''}
+              key={option.value}
+              onClick={() => setSortBy(option.value)}
+              className={sortBy === option.value ? 'bg-muted' : ''}
             >
-              {opt.label}
+              {t(option.labelKey)}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>

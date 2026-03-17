@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from '@/lib/navigation'
 import { Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
@@ -21,9 +22,10 @@ function getLoginErrorMessage(error: unknown) {
 }
 
 export function LoginPage() {
-  const [email, setEmail] = useState('demo@ai-note.app')
-  const [password, setPassword] = useState('demo1234')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const login = useLogin()
+  const { t } = useTranslation()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,7 +35,7 @@ export function LoginPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sign In</CardTitle>
+        <CardTitle>{t('auth.signIn')}</CardTitle>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
@@ -41,7 +43,7 @@ export function LoginPage() {
             <p className="text-sm text-destructive">{getLoginErrorMessage(login.error)}</p>
           )}
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t('auth.email')}</Label>
             <input
               id="email"
               type="email"
@@ -52,7 +54,7 @@ export function LoginPage() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t('auth.password')}</Label>
             <input
               id="password"
               type="password"
@@ -68,18 +70,15 @@ export function LoginPage() {
             disabled={login.isPending}
           >
             {login.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Sign In
-          </Button>
-          <Button variant="outline" className="w-full" type="button" disabled>
-            Sign in with Google
+            {t('auth.signIn')}
           </Button>
         </CardContent>
         <CardFooter className="flex justify-between text-sm">
           <Link to="/forgot-password" className="text-muted-foreground hover:underline">
-            Forgot password?
+            {t('auth.forgotPassword')}
           </Link>
           <Link to="/register" className="text-primary hover:underline">
-            Create account
+            {t('auth.createAccount')}
           </Link>
         </CardFooter>
       </form>

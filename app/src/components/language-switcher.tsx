@@ -8,13 +8,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-const languages = [
-  { code: 'en', label: 'English' },
-  { code: 'zh', label: '中文' },
-]
-
 export function LanguageSwitcher() {
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation()
+  const languages = [
+    { code: 'en', label: t('language.en') },
+    { code: 'zh', label: t('language.zh') },
+  ]
 
   return (
     <DropdownMenu>

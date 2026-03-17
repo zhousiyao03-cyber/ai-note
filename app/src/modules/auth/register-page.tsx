@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from '@/lib/navigation'
 import { Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
@@ -21,6 +22,7 @@ export function RegisterPage() {
   const [password, setPassword] = useState('')
   const register = useRegister()
   const needsEmailConfirmation = register.isSuccess && !register.data?.session
+  const { t } = useTranslation()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -30,7 +32,7 @@ export function RegisterPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create Account</CardTitle>
+        <CardTitle>{t('auth.signUp')}</CardTitle>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
@@ -39,11 +41,11 @@ export function RegisterPage() {
           )}
           {needsEmailConfirmation && (
             <p className="text-sm text-emerald-600">
-              Account created. Please check your email and confirm your address before signing in.
+              {t('auth.confirmEmail')}
             </p>
           )}
           <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">{t('auth.name')}</Label>
             <input
               id="name"
               type="text"
@@ -54,7 +56,7 @@ export function RegisterPage() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t('auth.email')}</Label>
             <input
               id="email"
               type="email"
@@ -65,7 +67,7 @@ export function RegisterPage() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t('auth.password')}</Label>
             <input
               id="password"
               type="password"
@@ -78,13 +80,13 @@ export function RegisterPage() {
           </div>
           <Button className="w-full" type="submit" disabled={register.isPending}>
             {register.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Create Account
+            {t('auth.signUp')}
           </Button>
         </CardContent>
         <CardFooter className="text-sm">
-          <span className="text-muted-foreground">Already have an account?</span>
+          <span className="text-muted-foreground">{t('auth.alreadyHaveAccount')}</span>
           <Link to="/login" className="ml-1 text-primary hover:underline">
-            Sign in
+            {t('auth.signIn')}
           </Link>
         </CardFooter>
       </form>

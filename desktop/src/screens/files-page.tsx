@@ -7,6 +7,7 @@ import type { AudioFile } from '@plaud/shared-types'
 
 import { formatDate, formatDuration, formatFileSize } from '../features/files/formatters'
 import { isValidAudioFile } from '../features/files/upload-helpers'
+import { pickNativeAudioFiles } from '../features/files/native-file-picker'
 import { useFileUpload } from '../features/files/use-file-upload'
 import { useFilesQuery } from '../features/files/use-files-query'
 import { desktopApi } from '../lib/api/client'
@@ -30,11 +31,11 @@ export function FilesPage() {
   const filesQuery = useFilesQuery()
   const { uploads, uploadFile, clearFinishedUploads } = useFileUpload()
 
-  async function handleSelection(files: FileList | null) {
-    if (!files) return
+  async function handleFiles(files: File[]) {
+    if (!files.length) return
     setUploadError(null)
 
-    for (const file of Array.from(files)) {
+    for (const file of files) {
       if (!isValidAudioFile(file)) {
         setUploadError(t('screens.files.invalidUpload', { name: file.name }))
         continue
@@ -47,6 +48,16 @@ export function FilesPage() {
         setUploadError(t('screens.files.uploadFailed'))
       }
     }
+  }
+
+  async function handleUploadClick() {
+    const nativeFiles = await pickNativeAudioFiles()
+    if (nativeFiles === null) {
+      inputRef.current?.click()
+      return
+    }
+
+    await handleFiles(nativeFiles)
   }
 
   const hasActiveUploads = uploads.some(
@@ -65,7 +76,7 @@ export function FilesPage() {
         <div className="hero-card__aside">
           <span className="pill pill--accent">{t('common.nextStep')}</span>
           <p>{t('common.nextStepValue')}</p>
-          <button className="button-link" onClick={() => inputRef.current?.click()} type="button">
+          <button className="button-link" onClick={() => void handleUploadClick()} type="button">
             {t('screens.files.uploadButton')}
           </button>
           <input
@@ -74,7 +85,7 @@ export function FilesPage() {
             className="sr-only"
             multiple
             type="file"
-            onChange={(event) => void handleSelection(event.currentTarget.files)}
+            onChange={(event) => void handleFiles(Array.from(event.currentTarget.files ?? []))}
           />
         </div>
       </div>

@@ -9,9 +9,15 @@ import type { AskAIMessage } from '@/types'
 
 const EMPTY_MESSAGES: AskAIMessage[] = []
 
+function getAskAiErrorMessage(error: unknown) {
+  if (error instanceof Error && error.message) return error.message
+  return 'Ask AI is temporarily unavailable.'
+}
+
 export function AskAIPanel() {
   const { id: fileId } = useParams<{ id: string }>()
   const [input, setInput] = useState('')
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const sidebarOpen = useAppStore((s) => s.askAiPanelOpen)
   const toggleSidebar = useAppStore((s) => s.toggleAskAiPanel)
   const messages = useAppStore((s) => s.chatMessages[fileId ?? ''] ?? EMPTY_MESSAGES)
@@ -25,6 +31,8 @@ export function AskAIPanel() {
     const question = input.trim()
     if (!question) return
 
+    setErrorMessage(null)
+
     const userMsg: AskAIMessage = {
       id: crypto.randomUUID(),
       role: 'user',
@@ -34,8 +42,12 @@ export function AskAIPanel() {
     addMessage(fileId, userMsg)
     setInput('')
 
-    const reply = await askAI.mutateAsync({ fileId, question })
-    addMessage(fileId, reply)
+    try {
+      const reply = await askAI.mutateAsync({ fileId, question })
+      addMessage(fileId, reply)
+    } catch (error) {
+      setErrorMessage(getAskAiErrorMessage(error))
+    }
   }
 
   return (
@@ -76,6 +88,11 @@ export function AskAIPanel() {
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="h-3 w-3 animate-spin" />
               {t('askAi.thinking')}
+            </div>
+          )}
+          {errorMessage && (
+            <div className="rounded-md border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+              {errorMessage}
             </div>
           )}
         </div>

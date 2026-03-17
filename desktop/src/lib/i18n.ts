@@ -99,7 +99,7 @@ const resources = {
       common: {
         nextStep: 'Next step',
         nextStepValue:
-          'Replace browser file selection with native Tauri dialogs and refine desktop session recovery across restarts.',
+          'Refine desktop session recovery across restarts and add richer background task behavior.',
         statuses: {
           pending: 'Pending',
           transcribing: 'Transcribing',
@@ -202,7 +202,7 @@ const resources = {
       common: {
         nextStep: '下一步',
         nextStepValue:
-          '把浏览器文件选择替换成 Tauri 原生对话框，并继续完善桌面端跨重启会话恢复。',
+          '继续完善桌面端跨重启会话恢复，并补充更完整的后台任务体验。',
         statuses: {
           pending: '待处理',
           transcribing: '转写中',

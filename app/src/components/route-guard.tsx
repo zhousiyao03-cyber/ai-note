@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Loader2 } from 'lucide-react'
 import { Navigate, useLocation } from '@/lib/navigation'
 import { createClient } from '@/lib/supabase/client'
 
@@ -26,7 +27,11 @@ export function RouteGuard({ children }: RouteGuardProps) {
   }, [])
 
   if (state === 'loading') {
-    return null
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    )
   }
 
   if (state === 'unauthenticated') {

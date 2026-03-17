@@ -3,7 +3,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@/lib/navigation'
 import { createClient } from '@/lib/supabase/client'
-import type { User } from '@/types'
+import { api } from '@/services/api'
+import type { User, UserPreferences } from '@/types'
 
 export function useCurrentUser() {
   return useQuery({
@@ -87,6 +88,30 @@ export function useLogout() {
     onSuccess: () => {
       queryClient.clear()
       navigate('/login')
+    },
+  })
+}
+
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: api.forgotPassword,
+  })
+}
+
+export function useUserPreferences() {
+  return useQuery({
+    queryKey: ['userPreferences'],
+    queryFn: (): Promise<UserPreferences> => api.getUserPreferences(),
+  })
+}
+
+export function useUpdateUserPreferences() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: Partial<UserPreferences>) => api.updateUserPreferences(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userPreferences'] })
     },
   })
 }

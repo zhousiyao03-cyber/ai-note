@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react'
 import { Upload, FileAudio, CheckCircle2, AlertCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import {
   Dialog,
   DialogContent,
@@ -20,6 +21,7 @@ export function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { uploads, uploadFile, clearCompleted } = useFileUpload()
+  const { t } = useTranslation()
 
   const handleFiles = useCallback(
     (files: FileList | null) => {
@@ -28,13 +30,13 @@ export function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
 
       for (const file of Array.from(files)) {
         if (!isValidAudioFile(file)) {
-          setError(`"${file.name}" is not a supported format. Use WAV, MP3, M4A, OGG, FLAC, or WebM.`)
+          setError(t('upload.invalidFormat', { fileName: file.name }))
           continue
         }
         uploadFile(file)
       }
     },
-    [uploadFile]
+    [t, uploadFile],
   )
 
   const handleDrop = useCallback(
@@ -43,20 +45,20 @@ export function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
       setIsDragging(false)
       handleFiles(e.dataTransfer.files)
     },
-    [handleFiles]
+    [handleFiles],
   )
 
-  const hasActiveUploads = uploads.some((u) => u.status === 'uploading' || u.status === 'processing')
+  const hasActiveUploads = uploads.some((upload) => upload.status === 'uploading' || upload.status === 'processing')
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Upload Audio Files</DialogTitle>
+          <DialogTitle>{t('upload.title')}</DialogTitle>
         </DialogHeader>
 
         <div
-          className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+          className={`rounded-lg border-2 border-dashed p-8 text-center transition-colors ${
             isDragging ? 'border-primary bg-primary/5' : 'border-muted-foreground/25'
           }`}
           onDragOver={(e) => {
@@ -67,9 +69,9 @@ export function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
           onDrop={handleDrop}
         >
           <Upload className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
-          <p className="text-sm font-medium">Drag & drop audio files here</p>
+          <p className="text-sm font-medium">{t('upload.dragDrop')}</p>
           <p className="mt-1 text-xs text-muted-foreground">
-            WAV, MP3, M4A, OGG, FLAC, WebM
+            {t('upload.formats')}
           </p>
           <Button
             variant="outline"
@@ -77,7 +79,7 @@ export function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
             className="mt-4"
             onClick={() => fileInputRef.current?.click()}
           >
-            Browse Files
+            {t('upload.browse')}
           </Button>
           <input
             ref={fileInputRef}
@@ -97,7 +99,7 @@ export function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
         )}
 
         {uploads.length > 0 && (
-          <div className="space-y-2 max-h-48 overflow-auto">
+          <div className="max-h-48 space-y-2 overflow-auto">
             {uploads.map((upload) => (
               <div key={upload.fileId} className="flex items-center gap-3 text-sm">
                 {upload.status === 'completed' ? (
@@ -117,7 +119,7 @@ export function UploadDialog({ open, onOpenChange }: UploadDialogProps) {
             ))}
             {!hasActiveUploads && (
               <Button variant="ghost" size="sm" onClick={clearCompleted} className="w-full">
-                Clear
+                {t('upload.clear')}
               </Button>
             )}
           </div>

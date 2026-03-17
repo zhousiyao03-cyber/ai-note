@@ -1,4 +1,7 @@
 {
+  "common": {
+    "loading": "Loading..."
+  },
   "nav": {
     "files": "Files",
     "trash": "Trash",
@@ -9,6 +12,7 @@
     "upload": "Upload",
     "search": "Search files...",
     "allStatus": "All Status",
+    "sortLabel": "Sort",
     "noFiles": "No audio files yet",
     "sortBy": {
       "createdAt": "Date Created",
@@ -39,7 +43,8 @@
     "dragDrop": "Drag & drop audio files here",
     "formats": "WAV, MP3, M4A, OGG, FLAC, WebM",
     "browse": "Browse Files",
-    "clear": "Clear"
+    "clear": "Clear",
+    "invalidFormat": "\"{{fileName}}\" is not a supported format. Use WAV, MP3, M4A, OGG, FLAC, or WebM."
   },
   "trash": {
     "title": "Trash",
@@ -54,7 +59,34 @@
     "billing": "Billing",
     "account": "Account",
     "saveChanges": "Save Changes",
-    "saved": "Saved!"
+    "saved": "Saved!",
+    "saveFailed": "Failed to save changes.",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "updatePassword": "Update Password",
+    "passwordUpdated": "Password updated successfully.",
+    "passwordUpdateFailed": "Failed to update password.",
+    "dangerZone": "Danger Zone",
+    "deleteAccountDescription": "Permanently delete your account and all associated data. This action cannot be undone.",
+    "deleteAccountComingSoon": "Delete Account (Coming Soon)",
+    "emailNotifications": "Email Notifications",
+    "emailNotificationsDescription": "Receive an email when transcription is complete.",
+    "autoTranscribe": "Auto-transcribe",
+    "autoTranscribeDescription": "Automatically start transcription after upload.",
+    "speakerDetection": "Speaker Detection",
+    "speakerDetectionDescription": "Enable speaker identification in transcriptions.",
+    "billingOverview": "Billing Overview",
+    "billingReadOnly": "Billing is not connected yet, so this section is currently read-only.",
+    "currentPlanLabel": "Current plan:",
+    "usageTrackingSoon": "Usage tracking and billing management will appear here once billing is connected.",
+    "currentPlan": "Current Plan",
+    "freePlan": "Free",
+    "billingComingSoon": "Billing Coming Soon",
+    "billingComingSoonDescription": "Stripe billing has not been wired up yet. You can leave your interest and we will surface the real checkout flow here later.",
+    "billingRequestSaved": "Interest saved",
+    "billingRequestSavedDescription": "We noted that you want the {{planName}} plan.",
+    "notifyMe": "Notify Me"
   },
   "auth": {
     "signIn": "Sign In",
@@ -65,7 +97,12 @@
     "backToSignIn": "Back to sign in",
     "invalidCredentials": "Invalid email or password",
     "resetPassword": "Reset Password",
-    "sendResetLink": "Send Reset Link"
+    "sendResetLink": "Send Reset Link",
+    "resetPasswordSent": "If an account exists for {{email}}, you will receive a password reset email shortly.",
+    "confirmEmail": "Account created. Please check your email and confirm your address before signing in.",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name"
   },
   "askAi": {
     "title": "Ask AI",
@@ -83,6 +120,6 @@
   },
   "language": {
     "en": "English",
-    "zh": "中文"
+    "zh": "Chinese"
   }
 }

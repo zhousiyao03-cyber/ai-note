@@ -23,6 +23,7 @@
 - [x] Add desktop login flow and protected routes backed by `/api/v1/auth/*` and `/api/v1/me`
 - [x] Add upload-complete desktop notification hook
 - [x] Document current desktop session strategy
+- [x] Replace browser upload trigger with Tauri native file dialog when available
 - [x] Install desktop dependencies
 - [x] Verify `pnpm build`
 - [ ] Verify `pnpm tauri:dev` once Rust toolchain is available
@@ -38,9 +39,10 @@
 - Desktop now supports browser-based local file selection inside the Tauri shell; native Tauri file dialogs are a later enhancement.
 - Desktop auth now uses backend cookies and `/api/v1/me` as the source of truth instead of storing tokens in app state.
 - Session notes are documented in `docs/desktop-session-strategy.md`.
+- Native file picker support now uses Tauri dialog and fs plugins, with browser input kept as a development fallback.
 
 ## Next recommended module
 
-- Replace web file input with native Tauri dialog and desktop notifications
 - Improve authenticated startup recovery across app restarts
 - Add desktop transcription polling refinements and upload retry behavior
+- Add system-level completion notifications after real Tauri runtime verification
